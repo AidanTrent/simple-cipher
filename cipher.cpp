@@ -1,33 +1,38 @@
-//Currently has to remove whitespace and punctuation.
 //Key will allways be processed in revese due to how parseKey works.
 
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <algorithm>
 
-std::string decrypt(std::string plainText, std::vector<int> key)
+std::string decrypt(std::vector<int> encryptedText, std::vector<int> key)
 {
-    std::string output = plainText;
+    std::string output;
 
-    int n = output.length();
     int x = 0;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < encryptedText.size(); i++)
     {
         if (x >= key.size())
         {
             x = 0;
         }
-        output[i] += key[x];
+        output += ((char)(encryptedText[i] + key[x]));
         x++;
     }
     return output;
 }
 
-std::string encrypt(std::string plainText, std::vector<int> key)
+std::vector<int> encrypt(std::string plainText, std::vector<int> key)
 {
-    std::string output = plainText;
+    std::vector<int>output;
 
-    int n = output.length();
+    //Put characters into int vector
+    for (int i = 0; i < plainText.length(); i++)
+    {
+        output.push_back(plainText[i]);
+    }
+
+    int n = plainText.length();
     int x = 0;
     for (int i = 0; i < n; i++)
     {
@@ -54,6 +59,25 @@ std::vector<int> parseKey(int input)
     return processedKey;
 }
 
+std::vector<int> parseEncryptedText(std::string input)
+{
+    std::vector<int> processedText;
+    std::string number;
+    for (int i = 0; i < input.length(); i++)
+    {
+        if (input[i] == ' ')
+        {
+            processedText.push_back(std::stoi(number));
+            number = "";
+        }
+        else
+        {
+            number += input[i];
+        }
+    }
+    return processedText;
+}
+
 int main()
 {
     std::string plainText;
@@ -65,26 +89,39 @@ int main()
 
     if (userIn == 0)
     {    
+        //Getting data from user
         std::cout << "Enter a string to encrypt : ";
         std::getline(std::cin >> std::ws, plainText);
-        plainText.erase(std::remove_if(plainText.begin(), plainText.end(), ::isspace), plainText.end());
-        plainText.erase(std::remove_if(plainText.begin(), plainText.end(), ::ispunct), plainText.end());
         std::cout << "Enter a key (integer) : ";
         std::cin >> userIn;
+        
+        //Processing information
         key = parseKey(userIn);
+        std::vector<int> encryptedData = encrypt(plainText, key);
 
-        std::cout << "\nEncrypted : " << encrypt(plainText, key) << '\n';
+        //Output encrypted information
+        std::cout << "\nEncrypted : ";
+        for (int i = 0; i < encryptedData.size(); i++)
+        {
+            std::cout << encryptedData[i];
+            std::cout << " ";
+        }
+        std::cout << '\n';
+
     }
     else if (userIn == 1)
     {
+        //Getting data from user
         std::cout << "Enter a string to decrypt : ";
         std::getline(std::cin >> std::ws, plainText);
-        std::cout << "Enter a key : ";
+        std::cout << "Enter a key (integer) : ";
         std::cin >> userIn;
+
+        //Processing information
         key = parseKey(userIn);
+        std::vector<int> processedText = parseEncryptedText(plainText);
 
-        std::cout << "\nDecrypted : " << decrypt(plainText, key) << '\n';
+        //Output decrypted infromation
+        std::cout << "\nDecrypted : " << decrypt(processedText, key) << '\n';
     }
-
-
 }
