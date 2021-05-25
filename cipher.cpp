@@ -9,15 +9,15 @@ std::string decrypt(std::vector<int> encryptedText, std::vector<int> key)
 {
     std::string output;
 
-    int x = 0;
+    int keyIndex = 0;
     for (int i = 0; i < encryptedText.size(); i++)
     {
-        if (x >= key.size())
+        if (keyIndex >= key.size())
         {
-            x = 0;
+            keyIndex = 0;
         }
-        output += ((char)(encryptedText[i] + key[x]));
-        x++;
+        output += ((char)(encryptedText[i] + key[keyIndex]));
+        keyIndex++;
     }
     return output;
 }
@@ -33,15 +33,15 @@ std::vector<int> encrypt(std::string plainText, std::vector<int> key)
     }
 
     int n = plainText.length();
-    int x = 0;
+    int keyIndex = 0;
     for (int i = 0; i < n; i++)
     {
-        if (x >= key.size())
+        if (keyIndex >= key.size())
         {
-            x = 0;
+            keyIndex = 0;
         }
-        output[i] -= key[x];
-        x++;
+        output[i] -= key[keyIndex];
+        keyIndex++;
     }
     return output;
 }
