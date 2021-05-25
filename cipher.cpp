@@ -8,9 +8,9 @@
 std::string decrypt(std::vector<int> encryptedText, std::vector<int> key)
 {
     std::string output;
-
     int keyIndex = 0;
-    for (int i = 0; i < encryptedText.size(); i++)
+
+    for (int i = 0; i < encryptedText.size() + 1; i++)
     {
         if (keyIndex >= key.size())
         {
@@ -48,7 +48,14 @@ std::vector<int> encrypt(std::string plainText, std::vector<int> key)
 
 std::vector<int> parseKey(int input)
 {
-    std::vector<int> processedKey;
+    std::vector<int> processedKey{};
+
+    if(input == 0)
+    {
+        processedKey.push_back(0);
+        return processedKey;
+    }
+
     int n = input;
     int digits = 0;
     for (int i = 0; n != 0; i++)
@@ -83,11 +90,11 @@ int main()
     std::string plainText;
     std::vector<int> key;
 
-    std::cout << "\nEncrypt or Decrypt? (0, 1) : ";
+    std::cout << "\nEncrypt or Decrypt? (1, 2) : ";
     int userIn;
     std::cin >> userIn;
 
-    if (userIn == 0)
+    if (userIn == 1)
     {    
         //Getting data from user
         std::cout << "Enter a string to encrypt : ";
@@ -109,7 +116,7 @@ int main()
         std::cout << '\n';
 
     }
-    else if (userIn == 1)
+    else if (userIn == 2)
     {
         //Getting data from user
         std::cout << "Enter a string to decrypt : ";
